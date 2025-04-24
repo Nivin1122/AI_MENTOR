@@ -1,0 +1,44 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './pages/auth/users/Login';
+import Register from './pages/auth/users/Register';
+import AdminLogin from './pages/auth/admin/AdminLogin';
+import AdminDashboard from './pages/auth/admin/AdminDashboard';
+import HomePage from './pages/auth/users/Home';
+import ProtectedRoute from './routes/ProtectedRoute';
+import AdminProtectedRoute from './routes/AdminProtectedRoute';
+
+
+function App() {
+  return (
+    <Router>
+      <div className="App">
+        <h1>JWT Auth with Redux</h1>
+        <Routes>
+
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route
+          path="/admin-dashboard"
+          element={
+            <AdminProtectedRoute>
+              <AdminDashboard />
+            </AdminProtectedRoute>
+          }
+        />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
