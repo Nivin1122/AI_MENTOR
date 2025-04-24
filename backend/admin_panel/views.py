@@ -7,6 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
+from rest_framework.views import APIView
 
 
 # Generate tokens for admin
@@ -17,23 +18,37 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
-@api_view(['POST'])
-def admin_login(request):
-    data = request.data
-    username = data.get('username')
-    password = data.get('password')
-
-    user = authenticate(username=username, password=password)
-
-    if user is None:
-        return Response({'detail': 'Invalid credentials'}, status=401)
-
-    if not user.is_staff:
-        return Response({'detail': 'User is not admin'}, status=401)
-
-    tokens = get_tokens_for_user(user)
-    return Response(tokens, status=200)
-
+class AdminLoginView(APIView):
+    def post(self, request):
+        # Get username and password from the request data
+        username = request.data.get('username')
+        password = request.data.get('password')
+        
+        # Print debugging info (remove in production)
+        print(f"Login attempt: username={username}")
+        
+        # Authenticate the user
+        user = authenticate(username=username, password=password)
+        
+        if user is None:
+            print("Authentication failed: Invalid credentials")
+            return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+        if not user.is_staff:
+            print(f"User {username} is not staff")
+            return Response({'message': 'User is not an admin'}, status=status.HTTP_403_FORBIDDEN)
+        
+        # If we get here, authentication was successful
+        print(f"Authentication successful for {username}")
+        
+        # Generate JWT refresh and access tokens
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+            'username': user.username,
+        })
+    
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])  # Restrict to admin users only

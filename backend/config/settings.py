@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'admin_panel',
+    'courses',
 ]
 
 MIDDLEWARE = [
@@ -60,9 +61,28 @@ REST_FRAMEWORK = {
     ),
 }
 
+# JWT settings
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
 AUTH_USER_MODEL = 'users.CustomUser'
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+
 
 ROOT_URLCONF = 'config.urls'
 
@@ -130,6 +150,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

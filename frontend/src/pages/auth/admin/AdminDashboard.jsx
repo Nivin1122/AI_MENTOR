@@ -1,71 +1,106 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { logoutAdmin } from '../../../redux/slices/auth/AdminAuthSlice';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logoutAdmin } from '../../../redux/slices/auth/AdminAuthSlice';
+import api from '../../../api/api';
 
 const AdminDashboard = () => {
-  const { token, isAuthenticated } = useSelector((state) => state.adminAuth || { token: null, isAuthenticated: false });
-  const dispatch = useDispatch();
-  const [message, setMessage] = useState("");
+  const [dashboardData, setDashboardData] = useState({});
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // Fetch dashboard data when component mounts
   useEffect(() => {
-    // Check if we have authentication before proceeding
-    const adminToken = token || localStorage.getItem('adminAccess');
-    
+    // Check if admin is authenticated
+    const adminToken = localStorage.getItem('adminAccess');
     if (!adminToken) {
-      console.log("No admin token found, redirecting to login");
       navigate('/admin-login');
       return;
     }
-    
-    console.log("Fetching dashboard with token:", adminToken);
-    setLoading(true);
-    
-    axios
-      .get("http://localhost:8000/admin-panel/dashboard/", {
-        headers: { Authorization: `Bearer ${adminToken}` },
-      })
-      .then((res) => {
-        console.log("Dashboard response:", res.data);
-        setMessage(res.data.message);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Dashboard error:", err);
-        setMessage("Access Denied: " + (err.response?.data?.detail || err.message));
-        setLoading(false);
-        
-        // If we get a 401 Unauthorized, the token is invalid, so logout
-        if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-          console.log("Token invalid or expired, logging out");
-          dispatch(logoutAdmin());
-          navigate('/admin-login');
-        }
-      });
-  }, [token, dispatch, navigate]);
 
-  // Handle logout
+    // Fetch dashboard data
+    const fetchDashboard = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/admin-panel/dashboard/');
+        setDashboardData(response.data);
+        setError('');
+      } catch (err) {
+        console.error('Dashboard fetch error:', err);
+        setError(
+          err.response?.data?.message || 
+          'Failed to load dashboard data. Please check your authentication.'
+        );
+        
+        // If unauthorized, redirect to login
+        if (err.response?.status === 401) {
+          handleLogout();
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchDashboard();
+  }, [navigate]);
+
   const handleLogout = () => {
+    // Clear admin tokens
+    localStorage.removeItem('adminAccess');
+    localStorage.removeItem('adminRefresh');
+    
+    // Update Redux state
     dispatch(logoutAdmin());
+    
+    // Redirect to login page
     navigate('/admin-login');
   };
 
   if (loading) {
-    return <div>Loading dashboard...</div>;
+    return <div className="loading">Loading dashboard...</div>;
   }
 
   return (
-    <div>
-      <h2>Admin Dashboard</h2>
-      <p>{message}</p>
+    <div className="admin-dashboard">
+      <header className="dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <button 
+          onClick={handleLogout}
+          className="logout-button"
+        >
+          Logout
+        </button>
+      </header>
 
-      <button onClick={handleLogout} style={{ padding: '10px', backgroundColor: 'red', color: 'white' }}>
-        Logout
-      </button>
+      <div className="dashboard-content">
+        {error ? (
+          <div className="error-message">{error}</div>
+        ) : (
+          <div className="welcome-message">
+            <h2>{dashboardData.message}</h2>
+            
+            {/* Add your dashboard components here */}
+            <div className="dashboard-stats">
+              {/* Example stats - replace with your actual data */}
+              <div className="stat-card">
+                <h3>Users</h3>
+                <p>0</p>
+              </div>
+              <div className="stat-card">
+                <h3>Courses</h3>
+                <p>0</p>
+              </div>
+              <div className="stat-card">
+                <h3>Enrollments</h3>
+                <p>0</p>
+              </div>
+            </div>
+            
+            {/* Add more dashboard sections as needed */}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
