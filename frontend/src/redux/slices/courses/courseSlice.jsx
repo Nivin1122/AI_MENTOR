@@ -1,24 +1,18 @@
-// courseSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../../api/api';
+import api, { fetchCourses } from '../../../api/api';
 
 // Async thunk for adding a new course
 export const addCourse = createAsyncThunk(
   'courses/addCourse',
   async (courseData, { rejectWithValue }) => {
     try {
-      // Get token directly from localStorage as a fallback
       const token = localStorage.getItem('adminAccess');
-      
-      // Set authorization header directly if needed
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`
         }
       };
-      
-      // Use the api instance that has auth interceptors
       const response = await api.post('/courses/add/', courseData, config);
       return response.data;
     } catch (error) {
@@ -26,6 +20,19 @@ export const addCourse = createAsyncThunk(
       return rejectWithValue(
         error.response?.data || { message: 'Failed to add course' }
       );
+    }
+  }
+);
+
+// ✅ New: Async thunk to fetch all courses
+export const fetchAllCourses = createAsyncThunk(
+  'courses/fetchAllCourses',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetchCourses();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || { message: 'Failed to fetch courses' });
     }
   }
 );
@@ -46,6 +53,7 @@ const courseSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Add Course
       .addCase(addCourse.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -58,6 +66,20 @@ const courseSlice = createSlice({
       .addCase(addCourse.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || 'Failed to add course';
+      })
+
+      // ✅ Fetch All Courses
+      .addCase(fetchAllCourses.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllCourses.fulfilled, (state, action) => {
+        state.loading = false;
+        state.courses = action.payload;
+      })
+      .addCase(fetchAllCourses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || 'Failed to fetch courses';
       });
   },
 });

@@ -1,27 +1,32 @@
 // utils/api.js
 import axios from 'axios';
 
-// Create axios instance with base URL
 const api = axios.create({
-  baseURL: 'http://localhost:8000'
+  baseURL: 'http://localhost:8000',
 });
 
-// Request interceptor to add authorization header
 api.interceptors.request.use(
   (config) => {
-    // Get token from localStorage
-    const adminToken = localStorage.getItem('adminAccess');
-    
-    // If token exists, add to headers
-    if (adminToken) {
-      config.headers.Authorization = `Bearer ${adminToken}`;
+    // Don't add Authorization header for public routes
+    const publicEndpoints = ['/courses/list/'];
+    const isPublic = publicEndpoints.some((url) => config.url.includes(url));
+
+    if (!isPublic) {
+      const adminToken = localStorage.getItem('adminAccess');
+      const userToken = localStorage.getItem('accessToken');
+      const token = adminToken || userToken;
+
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
-    
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
+
+// ✅ Works for public (no auth) access
+export const fetchCourses = () => api.get('/courses/list/');
 
 export default api;
