@@ -6,6 +6,8 @@ import CloudFeatures from './CloudFeatures';
 import CourseCategories from './CourseCategories';
 import PaidCourses from './PaidCourses';
 import FreeCourses from './FreeCourses';
+import Features from './Features';
+import Footer from './Footer';
 
 const Hero = () => {
   return (
@@ -144,6 +146,8 @@ const Hero = () => {
     <CourseCategories />
     <PaidCourses />
     <FreeCourses />
+    <Features />
+    <Footer/>
     </div>
     
   );
