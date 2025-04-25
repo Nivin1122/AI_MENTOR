@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../navbar/Navbar';
 import SuccessMetrics from './SuccessMetrics';
 import CloudFeatures from './CloudFeatures';
+import CourseCategories from './CourseCategories';
 
 const Hero = () => {
   return (
@@ -138,6 +139,7 @@ const Hero = () => {
 
     <SuccessMetrics />
     <CloudFeatures />
+    <CourseCategories />
     </div>
     
   );
