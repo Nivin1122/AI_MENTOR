@@ -1,4 +1,3 @@
-// utils/api.js
 import axios from 'axios';
 
 const api = axios.create({
@@ -7,7 +6,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    // Don't add Authorization header for public routes
+
     const publicEndpoints = ['/courses/list/'];
     const isPublic = publicEndpoints.some((url) => config.url.includes(url));
 
@@ -26,7 +25,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ✅ Works for public (no auth) access
 export const fetchCourses = () => api.get('/courses/list/');
 
 export default api;
