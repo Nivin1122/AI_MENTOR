@@ -4,6 +4,8 @@ import Navbar from '../navbar/Navbar';
 import SuccessMetrics from './SuccessMetrics';
 import CloudFeatures from './CloudFeatures';
 import CourseCategories from './CourseCategories';
+import PaidCourses from './PaidCourses';
+import FreeCourses from './FreeCourses';
 
 const Hero = () => {
   return (
@@ -140,6 +142,8 @@ const Hero = () => {
     <SuccessMetrics />
     <CloudFeatures />
     <CourseCategories />
+    <PaidCourses />
+    <FreeCourses />
     </div>
     
   );
