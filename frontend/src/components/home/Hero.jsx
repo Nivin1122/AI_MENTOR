@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../navbar/Navbar';
+import SuccessMetrics from './SuccessMetrics';
+import CloudFeatures from './CloudFeatures';
 
 const Hero = () => {
   return (
+    <div>
     <div className="relative bg-[#4DC1B8] overflow-hidden">
       <Navbar /> 
       
@@ -53,7 +56,6 @@ const Hero = () => {
                 />
               </div>
               
-            
             </div>
             
             {/* Floating elements */}
@@ -108,10 +110,11 @@ const Hero = () => {
                     Join Now
                   </button>
                 </div>
-              </div>
+              </div>        
             </div>
           </div>
         </div>
+        
       </div>
       
       {/* Perfectly balanced downward arch curve */}
@@ -123,14 +126,20 @@ const Hero = () => {
           className="w-full"
           style={{ display: 'block', height: '120px' }}
         >
-          <path 
-            fill="#ffffff" 
+          <path
+            fill="#ffffff"
             fillOpacity="1"
             d="M0,0 L0,0 C360,120 1080,120 1440,0 L1440,0 L1440,120 L0,120 Z"
           ></path>
         </svg>
       </div>
+      
     </div>
+
+    <SuccessMetrics />
+    <CloudFeatures />
+    </div>
+    
   );
 };
 
