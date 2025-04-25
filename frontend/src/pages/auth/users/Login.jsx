@@ -58,7 +58,7 @@ export default function Login() {
     setIsLoading(true);
     
     setTimeout(() => {
-      dispatch(loginUser(formData));
+    dispatch(loginUser(formData));
       navigate('/');
     }, 800);
   };
@@ -196,7 +196,7 @@ export default function Login() {
                     ) : "Sign in"}
                   </button>
                 </div>
-              </form>
+    </form>
               
               <div className="mt-6">
                 <div className="relative">

@@ -13,7 +13,8 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminProtectedRoute from "./routes/AdminProtectedRoute";
 import AdminCourseForm from "./pages/admin/course/AdminCourseForm";
 import ProtectedAdminRoute from "./routes/courses/ProtectedAdminRoute";
-
+import Navbar from "./components/navbar/Navbar";
+import Hero from "./components/home/Hero";
 
 function App() {
   return (
@@ -49,6 +50,8 @@ function App() {
               </ProtectedAdminRoute>
             }
           />
+          <Route path="/navbar" element={<Navbar />} />
+          <Route path="/hero" element={<Hero />} />
         </Routes>
       </div>
     </Router>

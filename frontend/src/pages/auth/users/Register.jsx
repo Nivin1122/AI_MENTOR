@@ -264,7 +264,7 @@ function Register() {
                     ) : "Sign up"}
                   </button>
                 </div>
-              </form>
+    </form>
               
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-500">
