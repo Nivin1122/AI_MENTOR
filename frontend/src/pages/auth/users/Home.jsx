@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import SuccessMetrics from '../../../components/home/SuccessMetrics';
 import CloudFeatures from '../../../components/home/CloudFeatures';
 import CourseCategories from '../../../components/home/CourseCategories';
 import PaidCourses from '../../../components/home/PaidCourses';
+import FreeCourses from '../../../components/home/FreeCourses';
 import Features from '../../../components/home/Features';
 import Footer from '../../../components/home/Footer';
 
@@ -36,119 +37,6 @@ const HomePage = () => {
   useEffect(() => {
     dispatch(fetchAllCourses());
   }, [dispatch]);
-
-  // Free Courses Component with API Data
-  const FreeCourses = () => {
-    const [isVisible, setIsVisible] = useState(false);
-    const sectionRef = useRef(null);
-  
-    useEffect(() => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            observer.unobserve(sectionRef.current);
-          }
-        },
-        { threshold: 0.1 }
-      );
-  
-      if (sectionRef.current) {
-        observer.observe(sectionRef.current);
-      }
-  
-      return () => {
-        if (sectionRef.current) {
-          observer.unobserve(sectionRef.current);
-        }
-      };
-    }, []);
-  
-    return (
-      <div className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#252641]">
-              FREE COURSES
-            </h2>
-            <a href="#" className="text-[#4DC1B8] hover:text-[#00CBB3] font-medium transition-colors">
-              See all
-            </a>
-          </div>
-  
-          {loading && <p className="text-center py-8">Loading courses...</p>}
-          {error && <p className="text-center text-red-500 py-8">{error}</p>}
-          
-          <div 
-            ref={sectionRef}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {courses.map((course, index) => (
-              <div 
-                key={course.id} 
-                className={`bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-500 
-                  ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}
-                  hover:shadow-md hover:-translate-y-1 group`}
-                style={{ 
-                  transitionDelay: `${index * 100}ms`,
-                }}
-              >
-                {/* Course Image with rounded corners */}
-                <div className="mx-4 mt-4 rounded-lg overflow-hidden">
-                  <img 
-                    src={course.image.startsWith('http') ? course.image : `http://localhost:8000${course.image}`} 
-                    alt={course.title}
-                    className="w-full h-40 object-cover transition-transform duration-700 group-hover:scale-110"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "src/assets/home/course.jpg"; // Fallback image
-                    }}
-                  />
-                </div>
-                
-                {/* Course details */}
-                <div className="p-5">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="inline-block text-xs font-medium px-2 py-1 bg-gray-100 text-gray-600 rounded">{course.language}</span>
-                    <div className="flex items-center text-sm text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      3 Month
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-lg font-bold text-[#252641] mb-2 transition-colors duration-300 group-hover:text-[#4DC1B8]">
-                    {course.title}
-                  </h3>
-                  
-                  <p className="text-sm text-gray-600 mb-4">
-                    {course.short_description}
-                  </p>
-                  
-                  {/* Price */}
-                  <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full mr-2 bg-gray-200 flex items-center justify-center overflow-hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </div>
-                      <span className="text-sm font-medium">Instructor</span>
-                    </div>
-                    
-                    <div className="flex items-center">
-                      <span className="text-lg text-[#4DC1B8] font-bold">₹{course.price}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div>
@@ -284,7 +172,7 @@ const HomePage = () => {
       <CloudFeatures />
       <CourseCategories />
       <PaidCourses />
-      <FreeCourses />  {/* Using custom FreeCourses component with API data */}
+      <FreeCourses apiCourses={courses} isLoading={loading} hasError={error} />
       <Features />
       <Footer />
     </div>
