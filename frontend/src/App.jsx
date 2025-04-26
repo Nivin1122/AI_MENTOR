@@ -17,6 +17,7 @@ import Navbar from "./components/navbar/Navbar";
 import Hero from "./components/home/Hero";
 import AdminLayout from "./components/admin/AdminLayout";
 
+
 function App() {
   return (
     <Router>
@@ -83,6 +84,7 @@ function App() {
             path="/admin/add-course" 
             element={<Navigate to="/admin/courses/add" replace />} 
           />
+         
         </Routes>
       </div>
     </Router>
