@@ -16,6 +16,7 @@ import ProtectedAdminRoute from "./routes/courses/ProtectedAdminRoute";
 import Navbar from "./components/navbar/Navbar";
 import Hero from "./components/home/Hero";
 import AdminLayout from "./components/admin/AdminLayout";
+import CourseDetails from "./pages/users/courses/CourseDetails";
 
 
 function App() {
@@ -36,7 +37,7 @@ function App() {
           />
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/hero" element={<Hero />} />
-
+          <Route path="/course-details" element={<CourseDetails />} />
           {/* Admin login (outside admin layout) */}
           <Route path="/admin-login" element={<AdminLogin />} />
           
