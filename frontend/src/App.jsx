@@ -37,7 +37,7 @@ function App() {
           />
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/hero" element={<Hero />} />
-          <Route path="/course-details" element={<CourseDetails />} />
+          <Route path="/courses/:id" element={<CourseDetails />} />
           {/* Admin login (outside admin layout) */}
           <Route path="/admin-login" element={<AdminLogin />} />
           
@@ -85,6 +85,9 @@ function App() {
             path="/admin/add-course" 
             element={<Navigate to="/admin/courses/add" replace />} 
           />
+
+          {/* sampleee */}
+          
          
         </Routes>
       </div>

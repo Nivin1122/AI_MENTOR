@@ -10,6 +10,8 @@ import {
 } from 'react-icons/fa'
 import { motion, useScroll, useTransform, useMotionValue } from 'framer-motion'
 import MainNavbar from '../../../components/navbar/MainNavbar'
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 // Import images directly to ensure they load properly
 // import courseImage from 'src/assets/courses/course_dtl.png'
@@ -18,6 +20,27 @@ import MainNavbar from '../../../components/navbar/MainNavbar'
 const CourseDetails = () => {
   const containerRef = useRef(null);
   const overviewRef = useRef(null);
+
+  const { id } = useParams();
+  const [course, setCourse] = useState(null);
+
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/courses/courses/${id}/`);
+        setCourse(response.data);
+      } catch (error) {
+        console.error('Error fetching course:', error);
+      }
+    };
+
+    fetchCourse();
+  }, [id]);
+
+  if (!course) {
+    return <div className="text-center mt-10">Loading...</div>;
+  }
+
   
   return (
     <div>
@@ -37,7 +60,7 @@ const CourseDetails = () => {
             initial={{ scale: 1.05 }}
             animate={{ scale: 1 }}
             transition={{ duration: 1.2 }}
-            src="src/assets/courses/course_dtl.png"
+            src={`http://127.0.0.1:8000${course.image}`}
             alt="Course training session" 
             className="w-full h-full object-cover object-center"
           />
@@ -69,7 +92,7 @@ const CourseDetails = () => {
               initial={{ scale: 1.2 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.8, duration: 0.6 }}
-              src="src/assets/courses/course_dtl.png" 
+              src={`http://127.0.0.1:8000${course.image}`}
               alt="Course thumbnail"
               className="w-full h-full object-cover"
             />
@@ -83,8 +106,8 @@ const CourseDetails = () => {
               className="flex justify-between items-start"
             >
               <div className="flex flex-col">
-                <span className="text-2xl font-bold">$49.65</span>
-                <span className="text-gray-400 text-sm line-through">$99.99</span>
+                <span className="text-2xl font-bold">{course.price}</span>
+                <span className="text-gray-400 text-sm line-through">{course.price}</span>
               </div>
               <motion.span 
                 whileHover={{ scale: 1.05 }}
@@ -136,9 +159,9 @@ const CourseDetails = () => {
               transition={{ delay: 1.7, duration: 0.5 }}
               className="mt-5 pt-4 border-t border-gray-200"
             >
-              <h4 className="font-semibold text-base mb-2">Training 5 or more people</h4>
+              <h4 className="font-semibold text-base mb-2">{course.language}</h4>
               <p className="text-sm text-gray-600 leading-snug">
-                Class, launched less than a year ago by Blackboard co-founder Michael Chasen, integrates exclusively...
+                {course.full_description}
               </p>
             </motion.div>
             

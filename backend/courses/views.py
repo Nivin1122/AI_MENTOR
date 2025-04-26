@@ -32,3 +32,14 @@ def list_courses(request):
     courses = Course.objects.all()
     serializer = CourseSerializer(courses, many=True)
     return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def get_course_detail(request, pk):
+    try:
+        course = Course.objects.get(id=pk)
+        serializer = CourseSerializer(course, many=False)
+        return Response(serializer.data)
+    except Course.DoesNotExist:
+        return Response({'error': 'Course not found'}, status=404)

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 const FreeCourses = ({ apiCourses, isLoading, hasError }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -109,6 +110,7 @@ const FreeCourses = ({ apiCourses, isLoading, hasError }) => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {coursesToDisplay.map((course, index) => (
+            <Link to={`/courses/${course.id}`} key={course.id}>
             <div 
               key={course.id} 
               className={`bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-500 
@@ -190,6 +192,7 @@ const FreeCourses = ({ apiCourses, isLoading, hasError }) => {
                 </div>
               </div>
             </div>
+            </Link>
           ))}
         </div>
       </div>
