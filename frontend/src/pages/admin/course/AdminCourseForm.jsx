@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCourse, clearMessages } from '../../../redux/slices/courses/courseSlice';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiUpload, FiX, FiCheckCircle } from 'react-icons/fi';
 
 const AdminCourseForm = () => {
@@ -20,6 +20,7 @@ const AdminCourseForm = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [formError, setFormError] = useState('');
   const [isDragging, setIsDragging] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   // Clear form after successful submission
   useEffect(() => {
@@ -35,9 +36,13 @@ const AdminCourseForm = () => {
       setImage(null);
       setPreviewImage(null);
       
-      // Clear success message after 3 seconds
+      // Show success popup
+      setShowSuccessPopup(true);
+      
+      // Clear success message and hide popup after 3 seconds
       const timer = setTimeout(() => {
         dispatch(clearMessages());
+        setShowSuccessPopup(false);
       }, 3000);
       
       return () => clearTimeout(timer);
@@ -142,6 +147,27 @@ const AdminCourseForm = () => {
     }
   };
 
+  // Success popup animation variants
+  const popupVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: {
+        duration: 0.3,
+        ease: [0.4, 0.0, 0.2, 1]
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.95,
+      transition: { 
+        duration: 0.2,
+        ease: [0.4, 0.0, 0.2, 1]
+      }
+    }
+  };
+
   return (
     <motion.div 
       className="bg-gray-900 text-gray-100 rounded-xl p-8 shadow-2xl w-full max-w-4xl mx-auto"
@@ -149,6 +175,44 @@ const AdminCourseForm = () => {
       animate="visible"
       variants={containerVariants}
     >
+      {/* Success Popup */}
+      <AnimatePresence>
+        {showSuccessPopup && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
+            <motion.div
+              className="max-w-sm w-full mx-4"
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={popupVariants}
+            >
+              <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+                <div className="bg-green-600 h-2"></div>
+                <div className="p-6">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 bg-green-500 rounded-full p-2">
+                      <FiCheckCircle className="text-white h-6 w-6" />
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-medium text-white">Course Added Successfully</h3>
+                      <p className="mt-1 text-sm text-gray-300">{successMessage || 'Your course has been added to the platform.'}</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-gray-700">
+                    <button
+                      onClick={() => setShowSuccessPopup(false)}
+                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 focus:ring-offset-gray-800 transition-colors duration-200"
+                    >
+                      Continue
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+      
       <motion.h2 
         className="text-3xl font-bold mb-8 text-blue-400 border-b border-gray-700 pb-4"
         variants={itemVariants}
@@ -179,7 +243,7 @@ const AdminCourseForm = () => {
         </motion.div>
       )}
       
-      {/* Success message */}
+      {/* Success message - keeping this for backwards compatibility */}
       {successMessage && (
         <motion.div 
           className="bg-green-900/40 border border-green-500 text-green-200 p-4 mb-6 rounded-lg flex items-center"
