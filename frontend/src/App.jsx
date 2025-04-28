@@ -14,9 +14,9 @@ import AdminProtectedRoute from "./routes/AdminProtectedRoute";
 import AdminCourseForm from "./pages/admin/course/AdminCourseForm";
 import ProtectedAdminRoute from "./routes/courses/ProtectedAdminRoute";
 import Navbar from "./components/navbar/Navbar";
-import Hero from "./components/home/Hero";
 import AdminLayout from "./components/admin/AdminLayout";
 import CourseDetails from "./pages/users/courses/CourseDetails";
+import UserList from "./pages/admin/users/UsersList";
 
 
 function App() {
@@ -36,7 +36,6 @@ function App() {
             }
           />
           <Route path="/navbar" element={<Navbar />} />
-          <Route path="/hero" element={<Hero />} />
           <Route path="/courses/:id" element={<CourseDetails />} />
           {/* Admin login (outside admin layout) */}
           <Route path="/admin-login" element={<AdminLogin />} />
@@ -67,9 +66,13 @@ function App() {
               <Route path="add" element={<AdminCourseForm />} />
               <Route path="categories" element={<div>Categories (placeholder)</div>} />
             </Route>
+
+            <Route path="users">
+              <Route index element={<UserList />} /> {/* New User List component */}
+            </Route>
             
             {/* Other admin routes */}
-            <Route path="users" element={<div>Users Management (placeholder)</div>} />
+            {/* <Route path="users" element={<div>Users Management (placeholder)</div>} /> */}
             <Route path="sales" element={<div>Sales (placeholder)</div>} />
             <Route path="analytics" element={<div>Analytics (placeholder)</div>} />
             <Route path="messages" element={<div>Messages (placeholder)</div>} />
@@ -85,6 +88,8 @@ function App() {
             path="/admin/add-course" 
             element={<Navigate to="/admin/courses/add" replace />} 
           />
+
+          
 
           {/* sampleee */}
           

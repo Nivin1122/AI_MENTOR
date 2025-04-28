@@ -9,6 +9,10 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
 from rest_framework.views import APIView
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from users.models import CustomUser
+from .serializers import UserListSerializer
+
 
 # Generate tokens for admin
 def get_tokens_for_user(user):
@@ -54,3 +58,12 @@ class AdminLoginView(APIView):
 @permission_classes([IsAdminUser])  # Restrict to admin users only
 def admin_dashboard(request):
     return Response({"message": "Welcome to the Admin Dashboard!"})
+
+
+class AdminUserListView(APIView):
+    authentication_classes = [JWTAuthentication]
+    
+    def get(self, request):
+        users = CustomUser.objects.all().order_by('-date_joined')  # Most recent first
+        serializer = UserListSerializer(users, many=True)
+        return Response(serializer.data)

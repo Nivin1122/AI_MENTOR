@@ -1,51 +1,65 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getAllUsers } from '../../../services/userService';
 
-const UsersList = () => {
+
+const UserList = () => {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const token = localStorage.getItem('access');
-
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-
       try {
-        const response = await axios.get('http://localhost:8000/admin-panel/all-users/', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUsers(response.data);
-      } catch (error) {
-        console.error(error);
-        if (error.response && error.response.status === 401) {
-          alert('Session expired. Please login again.');
-          // Redirect to login page if you want
-        }
+        const data = await getAllUsers();
+        setUsers(data);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load users. You may not have admin privileges.');
+        setLoading(false);
       }
     };
 
     fetchUsers();
   }, []);
 
+  if (loading) return <div className="loading">Loading users...</div>;
+  if (error) return <div className="error-message">{error}</div>;
+
   return (
-    <div>
-      <h1>All Users</h1>
-      {users.length > 0 ? (
-        <ul>
-          {users.map((user) => (
-            <li key={user.id}>{user.email}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No users found.</p>
-      )}
+    <div className="user-list-container">
+      <h2>User Management</h2>
+      <div className="user-count">Total Users: {users.length}</div>
+      
+      <div className="table-container">
+        <table className="user-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Active</th>
+              <th>Staff</th>
+              <th>Date Joined</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(user => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.username}</td>
+                <td>{user.email}</td>
+                <td>{`${user.first_name} ${user.last_name}`}</td>
+                <td>{user.is_active ? 'Yes' : 'No'}</td>
+                <td>{user.is_staff ? 'Yes' : 'No'}</td>
+                <td>{new Date(user.date_joined).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
 
-export default UsersList;
+export default UserList;
