@@ -22,7 +22,6 @@ const AdminCourseForm = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
-  // Clear form after successful submission
   useEffect(() => {
     if (successMessage) {
       setFormData({
@@ -35,11 +34,9 @@ const AdminCourseForm = () => {
       });
       setImage(null);
       setPreviewImage(null);
-      
-      // Show success popup
+
       setShowSuccessPopup(true);
-      
-      // Clear success message and hide popup after 3 seconds
+
       const timer = setTimeout(() => {
         dispatch(clearMessages());
         setShowSuccessPopup(false);
@@ -57,7 +54,7 @@ const AdminCourseForm = () => {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
-      // Create preview
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
@@ -99,32 +96,27 @@ const AdminCourseForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormError('');
-    
-    // Validate form
+
     if (!image) {
       setFormError('Please upload a course image');
       return;
     }
-    
-    // Create FormData object
+
     const data = new FormData();
     for (let key in formData) {
       data.append(key, formData[key]);
     }
     data.append('image', image);
 
-    // Check authentication token
     const token = localStorage.getItem('adminAccess');
     if (!token) {
       setFormError('You are not authenticated. Please log in again.');
       return;
     }
     
-    // Dispatch action to add course
     dispatch(addCourse(data));
   };
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -147,7 +139,6 @@ const AdminCourseForm = () => {
     }
   };
 
-  // Success popup animation variants
   const popupVariants = {
     hidden: { opacity: 0, scale: 0.95 },
     visible: { 

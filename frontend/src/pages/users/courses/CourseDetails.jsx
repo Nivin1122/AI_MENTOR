@@ -13,9 +13,6 @@ import MainNavbar from '../../../components/navbar/MainNavbar'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-// Import images directly to ensure they load properly
-// import courseImage from 'src/assets/courses/course_dtl.png'
-// import linaAvatar from 'src/assets/users/lina.jpg'
 
 const CourseDetails = () => {
   const containerRef = useRef(null);
@@ -47,7 +44,6 @@ const CourseDetails = () => {
       <MainNavbar />
       <div className="container mx-auto px-6 py-8" ref={containerRef}>
         
-      {/* Hero Section with Course Image */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -55,7 +51,7 @@ const CourseDetails = () => {
         className="w-full relative mb-8"
       >
         <div className="relative w-full h-[450px] overflow-hidden rounded-lg">
-          {/* Main large background image */}
+   
           <motion.img 
             initial={{ scale: 1.05 }}
             animate={{ scale: 1 }}
@@ -66,10 +62,8 @@ const CourseDetails = () => {
           />
         </div>
 
-        {/* Placeholder for the gap - reducing height */}
         <div style={{ height: "50px" }} className="w-full"></div>
           
-        {/* Right side content with pricing, thumbnail, etc. */}
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -81,7 +75,7 @@ const CourseDetails = () => {
           }}
           className="w-72 bg-white rounded-xl shadow-lg overflow-hidden z-10"
         >
-          {/* Thumbnail image in card - positioned to match reference image */}
+
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Use consistent key name for the token
 const ADMIN_TOKEN_KEY = 'adminAccess';
 const adminToken = localStorage.getItem(ADMIN_TOKEN_KEY);
 

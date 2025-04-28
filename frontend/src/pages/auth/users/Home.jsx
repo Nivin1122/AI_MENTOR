@@ -19,7 +19,6 @@ const HomePage = () => {
 
   const { courses, loading, error } = useSelector((state) => state.courses);
 
-  // Fetch homepage welcome message
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
 
@@ -33,21 +32,19 @@ const HomePage = () => {
       .catch((err) => setMessage("Unauthorized: Please log in"));
   }, []);
 
-  // Fetch courses on mount
   useEffect(() => {
     dispatch(fetchAllCourses());
   }, [dispatch]);
 
   return (
     <div>
-      {/* Hero Section */}
       <div className="relative bg-[#4DC1B8] overflow-hidden">
         <Navbar /> 
         
-        {/* Hero content container */}
+
         <div className="container mx-auto px-6 py-6 pb-12 md:pb-12 lg:pb-12 relative z-10">
           <div className="flex flex-col lg:flex-row items-center">
-            {/* Left content */}
+    
             <div className="w-full lg:w-1/2 text-white mb-8 lg:mb-0">
               <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 lg:mb-6">
                 <span className="text-[#FF9F67]">Studying</span> Online is now<br />
@@ -167,7 +164,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Components from Hero page */}
       <SuccessMetrics />
       <CloudFeatures />
       <CourseCategories />

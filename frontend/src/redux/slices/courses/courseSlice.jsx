@@ -24,7 +24,6 @@ export const addCourse = createAsyncThunk(
   }
 );
 
-// ✅ New: Async thunk to fetch all courses
 export const fetchAllCourses = createAsyncThunk(
   'courses/fetchAllCourses',
   async (_, { rejectWithValue }) => {
@@ -68,7 +67,7 @@ const courseSlice = createSlice({
         state.error = action.payload?.message || 'Failed to add course';
       })
 
-      // ✅ Fetch All Courses
+      // Fetch All Courses
       .addCase(fetchAllCourses.pending, (state) => {
         state.loading = true;
         state.error = null;

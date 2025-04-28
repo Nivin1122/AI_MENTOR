@@ -73,7 +73,7 @@ const AdminSidebar = () => {
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
-    // Close any open submenu when collapsing sidebar
+    
     if (isExpanded) setActiveSubmenu(null);
   };
 

@@ -1,4 +1,3 @@
-// src/admin_panel/ProtectedAdminRoute.jsx
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 

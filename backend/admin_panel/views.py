@@ -24,14 +24,11 @@ def get_tokens_for_user(user):
 
 class AdminLoginView(APIView):
     def post(self, request):
-        # Get username and password from the request data
+        
         username = request.data.get('username')
         password = request.data.get('password')
-        
-        # Print debugging info (remove in production)
         print(f"Login attempt: username={username}")
         
-        # Authenticate the user
         user = authenticate(username=username, password=password)
         
         if user is None:
@@ -41,11 +38,9 @@ class AdminLoginView(APIView):
         if not user.is_staff:
             print(f"User {username} is not staff")
             return Response({'message': 'User is not an admin'}, status=status.HTTP_403_FORBIDDEN)
-        
-        # If we get here, authentication was successful
+
         print(f"Authentication successful for {username}")
         
-        # Generate JWT refresh and access tokens
         refresh = RefreshToken.for_user(user)
         return Response({
             'access': str(refresh.access_token),
@@ -55,7 +50,7 @@ class AdminLoginView(APIView):
     
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])  # Restrict to admin users only
+@permission_classes([IsAdminUser]) 
 def admin_dashboard(request):
     return Response({"message": "Welcome to the Admin Dashboard!"})
 
@@ -64,6 +59,6 @@ class AdminUserListView(APIView):
     authentication_classes = [JWTAuthentication]
     
     def get(self, request):
-        users = CustomUser.objects.all().order_by('-date_joined')  # Most recent first
+        users = CustomUser.objects.all().order_by('-date_joined') 
         serializer = UserListSerializer(users, many=True)
         return Response(serializer.data)

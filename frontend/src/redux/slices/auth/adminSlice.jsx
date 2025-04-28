@@ -8,7 +8,7 @@ export const adminLogin = createAsyncThunk(
     const response = await axios.post('http://localhost:8000/admin-panel/admin-login/', adminData);
     const tokens = response.data;
 
-    localStorage.setItem('adminToken', tokens.access); // ✅ Store token
+    localStorage.setItem('adminToken', tokens.access);
     return tokens;
   }
 );

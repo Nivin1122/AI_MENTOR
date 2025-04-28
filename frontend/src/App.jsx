@@ -24,7 +24,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          {/* User routes */}
+          
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route
@@ -49,7 +49,7 @@ function App() {
               </AdminProtectedRoute>
             }
           >
-            {/* Dashboard as index route */}
+          
             <Route 
               index 
               element={<Navigate to="/admin/dashboard" replace />} 
@@ -59,8 +59,7 @@ function App() {
               path="dashboard" 
               element={<AdminDashboard />} 
             />
-            
-            {/* Courses section */}
+           
             <Route path="courses">
               <Route index element={<div>All Courses (placeholder)</div>} />
               <Route path="add" element={<AdminCourseForm />} />
@@ -68,18 +67,15 @@ function App() {
             </Route>
 
             <Route path="users">
-              <Route index element={<UserList />} /> {/* New User List component */}
+              <Route index element={<UserList />} />
             </Route>
             
-            {/* Other admin routes */}
-            {/* <Route path="users" element={<div>Users Management (placeholder)</div>} /> */}
             <Route path="sales" element={<div>Sales (placeholder)</div>} />
             <Route path="analytics" element={<div>Analytics (placeholder)</div>} />
             <Route path="messages" element={<div>Messages (placeholder)</div>} />
             <Route path="settings" element={<div>Settings (placeholder)</div>} />
           </Route>
 
-          {/* Legacy admin routes - redirect to new structure */}
           <Route 
             path="/admin-dashboard" 
             element={<Navigate to="/admin/dashboard" replace />} 
@@ -88,11 +84,6 @@ function App() {
             path="/admin/add-course" 
             element={<Navigate to="/admin/courses/add" replace />} 
           />
-
-          
-
-          {/* sampleee */}
-          
          
         </Routes>
       </div>

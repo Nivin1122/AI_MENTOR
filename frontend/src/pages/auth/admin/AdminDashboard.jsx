@@ -32,8 +32,7 @@ const AdminDashboard = () => {
           err.response?.data?.message || 
           'Failed to load dashboard data. Please check your authentication.'
         );
-        
-        // If unauthorized, redirect to login
+
         if (err.response?.status === 401) {
           handleLogout();
         }
@@ -46,14 +45,12 @@ const AdminDashboard = () => {
   }, [navigate]);
 
   const handleLogout = () => {
-    // Clear admin tokens
+
     localStorage.removeItem('adminAccess');
     localStorage.removeItem('adminRefresh');
     
-    // Update Redux state
     dispatch(logoutAdmin());
     
-    // Redirect to login page
     navigate('/admin-login');
   };
 
@@ -80,9 +77,8 @@ const AdminDashboard = () => {
           <div className="welcome-message">
             <h2>{dashboardData.message}</h2>
             
-            {/* Add your dashboard components here */}
             <div className="dashboard-stats">
-              {/* Example stats - replace with your actual data */}
+           
               <div className="stat-card">
                 <h3>Users</h3>
                 <p>0</p>
@@ -97,7 +93,6 @@ const AdminDashboard = () => {
               </div>
             </div>
             
-            {/* Add more dashboard sections as needed */}
           </div>
         )}
       </div>

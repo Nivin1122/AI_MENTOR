@@ -6,7 +6,7 @@ export const fetchAllUsers = createAsyncThunk(
   'users/fetchAllUsers',
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('adminAccess'); // your access token
+      const token = localStorage.getItem('adminAccess'); 
       const response = await axios.get('http://localhost:8000/admin-panel/all-users/', {
         headers: {
           Authorization: `Bearer ${token}`,
