@@ -106,7 +106,7 @@ const CourseDetails = () => {
               className="flex justify-between items-start"
             >
               <div className="flex flex-col">
-                <span className="text-2xl font-bold">{course.price}</span>
+                <span className="text-2xl font-bold line-through">{course.price}</span>
                 <span className="text-gray-400 text-sm line-through">{course.price}</span>
               </div>
               <motion.span 

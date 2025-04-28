@@ -181,7 +181,7 @@ const FreeCourses = ({ apiCourses, isLoading, hasError }) => {
                   
                   <div className="flex items-center">
                     {apiCourses ? (
-                      <span className="text-lg text-[#4DC1B8] font-bold">₹{course.price}</span>
+                      <span className="text-lg text-[#4DC1B8] font-bold line-through">₹{course.price}</span>
                     ) : (
                       <>
                         <span className="text-sm text-gray-500 line-through mr-2">{course.regularPrice}</span>
@@ -189,6 +189,7 @@ const FreeCourses = ({ apiCourses, isLoading, hasError }) => {
                       </>
                     )}
                   </div>
+
                 </div>
               </div>
             </div>
