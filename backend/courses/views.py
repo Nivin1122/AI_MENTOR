@@ -6,6 +6,10 @@ from .serializers import CourseSerializer
 from .models import Course
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
+from rest_framework import generics, permissions
+from .models import Category
+from .serializers import CategorySerializer
+
 
 
 @api_view(['POST'])
@@ -43,3 +47,13 @@ def get_course_detail(request, pk):
         return Response(serializer.data)
     except Course.DoesNotExist:
         return Response({'error': 'Course not found'}, status=404)
+    
+
+class CategoryListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [IsAdminUser()]
+        return [permissions.AllowAny()]

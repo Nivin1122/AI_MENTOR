@@ -17,6 +17,7 @@ import Navbar from "./components/navbar/Navbar";
 import AdminLayout from "./components/admin/AdminLayout";
 import CourseDetails from "./pages/users/courses/CourseDetails";
 import UserList from "./pages/admin/users/UsersList";
+import AddCategory from "./pages/admin/course/category/AddCategory";
 
 
 function App() {
@@ -64,6 +65,10 @@ function App() {
               <Route index element={<div>All Courses (placeholder)</div>} />
               <Route path="add" element={<AdminCourseForm />} />
               <Route path="categories" element={<div>Categories (placeholder)</div>} />
+            </Route>
+
+            <Route path="category">
+              <Route path="create" element={<AddCategory />} />
             </Route>
 
             <Route path="users">
