@@ -17,7 +17,7 @@ import {
 
 const AdminSidebar = () => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [activeSubmenu, setActiveSubmenu] = useState(null);
+  const [activeSubmenus, setActiveSubmenus] = useState([]);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const location = useLocation();
 
@@ -40,8 +40,23 @@ const AdminSidebar = () => {
       path: '/admin/courses',
       submenu: [
         { title: 'All Courses', path: '/admin/courses' },
-        { title: 'Add Course', path: '/admin/courses/add' },
-        { title: 'Categories', path: '/admin/courses/categories' },
+        {
+          title: 'Course Management',
+          path: '/admin/courses/management',
+          submenu: [
+            { title: 'Add Course', path: '/admin/courses/add' },
+            { title: 'Edit Courses', path: '/admin/courses/edit' }
+          ]
+        },
+        {
+          title: 'Categories',
+          path: '/admin/courses/categories',
+          submenu: [
+            { title: 'All Categories', path: '/admin/courses/categories' },
+            { title: 'Add Category', path: '/admin/category/create' },
+            { title: 'Edit Categories', path: '/admin/courses/categories/edit' }
+          ]
+        }
       ]
     },
     {
@@ -73,12 +88,20 @@ const AdminSidebar = () => {
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
-    
-    if (isExpanded) setActiveSubmenu(null);
+    if (isExpanded) {
+      setActiveSubmenus([]); // Clear all active submenus when collapsing
+    }
   };
 
-  const toggleSubmenu = (index) => {
-    setActiveSubmenu(activeSubmenu === index ? null : index);
+  const toggleSubmenu = (menuPath) => {
+    setActiveSubmenus(prev => {
+      const isActive = prev.includes(menuPath);
+      if (isActive) {
+        return prev.filter(path => !path.startsWith(menuPath));
+      } else {
+        return [...prev, menuPath];
+      }
+    });
   };
 
   const isActivePath = (path) => {
@@ -88,7 +111,10 @@ const AdminSidebar = () => {
   const isActiveParent = (item) => {
     if (isActivePath(item.path)) return true;
     if (item.submenu) {
-      return item.submenu.some(subItem => isActivePath(subItem.path));
+      return item.submenu.some(subItem => 
+        isActivePath(subItem.path) || 
+        (subItem.submenu && isActiveParent(subItem))
+      );
     }
     return false;
   };
@@ -226,6 +252,75 @@ const AdminSidebar = () => {
     }
   };
 
+  const renderSubmenuItems = (items, parentPath = '') => {
+    return items.map((subItem, subIndex) => {
+      const currentPath = `${parentPath}-${subIndex}`;
+      
+      return (
+        <motion.div
+          key={subItem.title}
+          variants={submenuItemVariants}
+          custom={subIndex}
+        >
+          {subItem.submenu ? (
+            <div className="ml-2">
+              <motion.button
+                onClick={() => toggleSubmenu(currentPath)}
+                className={`flex items-center justify-between w-full px-3 py-2 rounded-md text-sm transition-colors duration-200 ${
+                  isActiveParent(subItem)
+                    ? 'bg-gray-800/50 text-blue-400'
+                    : 'text-gray-400 hover:bg-gray-800/30 hover:text-gray-200'
+                }`}
+              >
+                <span>{subItem.title}</span>
+                <FiChevronRight
+                  className={`h-3 w-3 transform transition-transform ${
+                    activeSubmenus.includes(currentPath) ? 'rotate-90' : ''
+                  }`}
+                />
+              </motion.button>
+              <AnimatePresence>
+                {activeSubmenus.includes(currentPath) && (
+                  <motion.div
+                    variants={submenuVariants}
+                    initial="closed"
+                    animate="open"
+                    exit="closed"
+                    className="ml-4"
+                  >
+                    {renderSubmenuItems(subItem.submenu, currentPath)}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <Link
+              to={subItem.path}
+              className={`flex items-center px-3 py-2 rounded-md text-sm transition-colors duration-200 ${
+                isActivePath(subItem.path)
+                  ? 'bg-gray-800/50 text-blue-400'
+                  : 'text-gray-400 hover:bg-gray-800/30 hover:text-gray-200'
+              }`}
+            >
+              <motion.span
+                className="h-1.5 w-1.5 rounded-full bg-current mr-3"
+                animate={isActivePath(subItem.path) ?
+                  { scale: [1, 1.5, 1], opacity: [1, 0.8, 1] } :
+                  { scale: 1, opacity: 1 }
+                }
+                transition={{
+                  repeat: isActivePath(subItem.path) ? Infinity : 0,
+                  duration: 2
+                }}
+              />
+              {subItem.title}
+            </Link>
+          )}
+        </motion.div>
+      );
+    });
+  };
+
   return (
     <>
       {/* Mobile overlay */}
@@ -327,7 +422,7 @@ const AdminSidebar = () => {
                 {/* Main menu item */}
                 {item.submenu ? (
                   <motion.button
-                    onClick={() => toggleSubmenu(index)}
+                    onClick={() => toggleSubmenu(index.toString())}
                     className={`w-full flex items-center justify-between px-3 py-3 rounded-md transition-colors duration-200 ${
                       isActiveParent(item) 
                         ? 'bg-blue-600 text-white' 
@@ -361,7 +456,7 @@ const AdminSidebar = () => {
                         className="transform transition-transform duration-200"
                       >
                         <motion.div
-                          animate={{ rotate: activeSubmenu === index ? 90 : 0 }}
+                          animate={{ rotate: activeSubmenus.includes(index.toString()) ? 90 : 0 }}
                           transition={{ duration: 0.2 }}
                         >
                           <FiChevronRight className="h-4 w-4" />
@@ -405,7 +500,7 @@ const AdminSidebar = () => {
                 {/* Submenu with enhanced animation */}
                 {item.submenu && isExpanded && (
                   <AnimatePresence>
-                    {activeSubmenu === index && (
+                    {activeSubmenus.includes(index.toString()) && (
                       <motion.div
                         variants={submenuVariants}
                         initial="closed"
@@ -413,35 +508,7 @@ const AdminSidebar = () => {
                         exit="closed"
                         className="overflow-hidden ml-8 mt-1"
                       >
-                        {item.submenu.map((subItem, subIndex) => (
-                          <motion.div
-                            key={subItem.title}
-                            variants={submenuItemVariants}
-                            custom={subIndex}
-                          >
-                            <Link
-                              to={subItem.path}
-                              className={`flex items-center px-3 py-2 rounded-md text-sm transition-colors duration-200 ${
-                                isActivePath(subItem.path) 
-                                  ? 'bg-gray-800/50 text-blue-400' 
-                                  : 'text-gray-400 hover:bg-gray-800/30 hover:text-gray-200'
-                              }`}
-                            >
-                              <motion.span 
-                                className="h-1.5 w-1.5 rounded-full bg-current mr-3"
-                                animate={isActivePath(subItem.path) ? 
-                                  { scale: [1, 1.5, 1], opacity: [1, 0.8, 1] } : 
-                                  { scale: 1, opacity: 1 }
-                                }
-                                transition={{ 
-                                  repeat: isActivePath(subItem.path) ? Infinity : 0, 
-                                  duration: 2 
-                                }}
-                              />
-                              {subItem.title}
-                            </Link>
-                          </motion.div>
-                        ))}
+                        {renderSubmenuItems(item.submenu, index.toString())}
                       </motion.div>
                     )}
                   </AnimatePresence>
