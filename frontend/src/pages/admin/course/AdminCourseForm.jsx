@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCourse, clearMessages } from '../../../redux/slices/courses/courseSlice';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiUpload, FiX, FiCheckCircle } from 'react-icons/fi';
+import { FiUpload, FiX, FiCheckCircle, FiChevronDown } from 'react-icons/fi';
 
 const AdminCourseForm = () => {
   const dispatch = useDispatch();
   const { loading, error, successMessage } = useSelector((state) => state.courses);
+  const [categories, setCategories] = useState([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+  const [categoryError, setCategoryError] = useState('');
   
   const [formData, setFormData] = useState({
     title: '',
     language: '',
-    category: '',
+    category: '', // This will now store the category ID
     short_description: '',
     full_description: '',
     price: '',
@@ -21,6 +24,41 @@ const AdminCourseForm = () => {
   const [formError, setFormError] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
+  // Fetch categories when component mounts
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setIsLoadingCategories(true);
+      setCategoryError('');
+      
+      try {
+        const response = await fetch('http://localhost:8000/courses/categories/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+    
+        if (!response.ok) {
+          throw new Error(`Failed to fetch categories: ${response.status}`);
+        }
+    
+        // Parse the JSON data
+        const data = await response.json();
+        console.log('Categories data:', data);
+        
+        // Set the categories state
+        setCategories(data);
+      } catch (error) {
+        console.error('Category fetch error:', error);
+        setCategoryError(error.message || 'Something went wrong');
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+    
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     if (successMessage) {
@@ -99,6 +137,11 @@ const AdminCourseForm = () => {
 
     if (!image) {
       setFormError('Please upload a course image');
+      return;
+    }
+
+    if (!formData.category) {
+      setFormError('Please select a category');
       return;
     }
 
@@ -299,15 +342,37 @@ const AdminCourseForm = () => {
             <label htmlFor="category" className="block text-sm font-medium text-gray-300 mb-2">
               Category
             </label>
-            <input 
-              id="category"
-              name="category" 
-              value={formData.category}
-              placeholder="Course category" 
-              onChange={handleChange} 
-              required 
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-            />
+            <div className="relative">
+              <select
+                id="category"
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                required
+                className="appearance-none w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                disabled={isLoadingCategories}
+              >
+                <option value="">Select a category</option>
+                {Array.isArray(categories) && categories.length > 0 ? (
+                  categories.map(category => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>No categories available</option>
+                )}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                <FiChevronDown className="h-5 w-5" />
+              </div>
+            </div>
+            {categoryError && (
+              <p className="mt-1 text-sm text-red-400">{categoryError}</p>
+            )}
+            {isLoadingCategories && (
+              <p className="mt-1 text-sm text-blue-400">Loading categories...</p>
+            )}
           </motion.div>
         </motion.div>
         

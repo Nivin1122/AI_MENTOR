@@ -89,6 +89,7 @@ const FreeCourses = ({ apiCourses, isLoading, hasError }) => {
 
   // Use API data if provided, otherwise use default data
   const coursesToDisplay = apiCourses && apiCourses.length > 0 ? apiCourses : defaultCourses;
+  console.log(coursesToDisplay)
 
   return (
     <div className="py-16 bg-white">
@@ -140,7 +141,7 @@ const FreeCourses = ({ apiCourses, isLoading, hasError }) => {
               <div className="p-5">
                 <div className="flex justify-between items-center mb-3">
                   <span className="inline-block text-xs font-medium px-2 py-1 bg-gray-100 text-gray-600 rounded">
-                    {apiCourses ? course.language : course.category}
+                    {course.category}
                   </span>
                   <div className="flex items-center text-sm text-gray-400">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
