@@ -18,6 +18,10 @@ import AdminLayout from "./components/admin/AdminLayout";
 import CourseDetails from "./pages/users/courses/CourseDetails";
 import UserList from "./pages/admin/users/UsersList";
 import AddCategory from "./pages/admin/course/category/AddCategory";
+import StartClass from "./pages/users/courses/StartClass";
+import AddSyllabus from "./pages/admin/course/syllabus/AddSyllabus";
+import ListSyllabus from "./pages/admin/course/syllabus/ListSyllabus";
+import SyllabusPage from "./pages/users/courses/SyllabusPage";
 
 
 function App() {
@@ -36,6 +40,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+          
+          <Route path="/course/:courseId/syllabus" element={<SyllabusPage />} />
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/courses/:id" element={<CourseDetails />} />
           {/* Admin login (outside admin layout) */}
@@ -65,6 +71,8 @@ function App() {
               <Route index element={<div>All Courses (placeholder)</div>} />
               <Route path="add" element={<AdminCourseForm />} />
               <Route path="categories" element={<div>Categories (placeholder)</div>} />
+              <Route path="add_syllabus" element={<AddSyllabus />}/>
+              <Route path="list_syllabus" element={<ListSyllabus />}/>
             </Route>
 
             <Route path="category">

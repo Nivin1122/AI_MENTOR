@@ -7,8 +7,8 @@ from .models import Course
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework import generics, permissions
-from .models import Category
-from .serializers import CategorySerializer
+from .models import Category,Syllabus
+from .serializers import CategorySerializer, SyllabusSerializer, SyllabusListSerializer
 
 
 
@@ -57,3 +57,37 @@ class CategoryListCreateAPIView(generics.ListCreateAPIView):
         if self.request.method == 'POST':
             return [IsAdminUser()]
         return [permissions.AllowAny()]
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated]) 
+def add_Syllabus(request):
+    
+    serializer = SyllabusSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        print(f"Serializer errors: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def list_syllabus(request):
+    syllabus = Syllabus.objects.all()
+    serializer = SyllabusListSerializer(syllabus, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_syllabus_by_course(request, course_id):
+    try:
+        course = Course.objects.get(id=course_id)
+    except Course.DoesNotExist:
+        return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    syllabus = Syllabus.objects.filter(course=course)
+    serializer = SyllabusListSerializer(syllabus, many=True)
+    return Response(serializer.data)

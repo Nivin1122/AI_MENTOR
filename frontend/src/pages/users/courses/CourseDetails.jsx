@@ -10,16 +10,22 @@ import {
 } from 'react-icons/fa'
 import { motion, useScroll, useTransform, useMotionValue } from 'framer-motion'
 import MainNavbar from '../../../components/navbar/MainNavbar'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom'
 
 
 const CourseDetails = () => {
   const containerRef = useRef(null);
   const overviewRef = useRef(null);
+  const navigate = useNavigate();
 
   const { id } = useParams();
   const [course, setCourse] = useState(null);
+
+  const handleStartNow = async (courseId) => {
+    navigate(`/course/${courseId}/syllabus`);
+  };
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -127,8 +133,9 @@ const CourseDetails = () => {
               whileHover={{ scale: 1.03, backgroundColor: "#00a99d" }}
               whileTap={{ scale: 0.97 }}
               className="w-full py-3 bg-teal-500 text-white rounded-md font-medium transition-all"
+              onClick={() => handleStartNow(course.id)}
             >
-              Buy Now
+              Start Now
             </motion.button>
             
             <motion.div 
@@ -153,9 +160,9 @@ const CourseDetails = () => {
               transition={{ delay: 1.7, duration: 0.5 }}
               className="mt-5 pt-4 border-t border-gray-200"
             >
-              <h4 className="font-semibold text-base mb-2">{course.language}</h4>
+              <h4 className="font-semibold text-base mb-2">{course.category}</h4>
               <p className="text-sm text-gray-600 leading-snug">
-                {course.full_description}
+                {course.course_prompt}
               </p>
             </motion.div>
             

@@ -190,6 +190,7 @@ const FreeCourses = ({ apiCourses, isLoading, hasError }) => {
                       </>
                     )}
                   </div>
+                  
 
                 </div>
               </div>
@@ -202,4 +203,4 @@ const FreeCourses = ({ apiCourses, isLoading, hasError }) => {
   );
 };
 
-export default FreeCourses; 
+export default FreeCourses;
