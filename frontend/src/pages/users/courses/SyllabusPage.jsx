@@ -5,10 +5,11 @@ import MainNavbar from "../../../components/navbar/MainNavbar";
 import { vapi } from "../../../sdk/vapi.sdk"; 
 import aiMentor from "../../../utils/mentorDTO"; 
 
-
 const SyllabusPage = () => {
   const { courseId } = useParams();
   const [syllabus, setSyllabus] = useState([]);
+  const [isCallActive, setIsCallActive] = useState(false);
+  const [activeItemIndex, setActiveItemIndex] = useState(null);
 
   useEffect(() => {
     axios
@@ -21,9 +22,8 @@ const SyllabusPage = () => {
       .catch((error) => console.error("Error loading syllabus:", error));
   }, [courseId]);
 
-  
-  const handleAskAI = (topic, description) => {
-    
+
+  const handleAskAI = (topic, description, index) => {
     const mentorWithTopic = {
       ...aiMentor,
       model: {
@@ -40,8 +40,32 @@ const SyllabusPage = () => {
       },
     };
 
+    try {
+      console.log("Starting new call with topic:", topic);
+      const call = vapi.start(mentorWithTopic);
+      console.log("Call return value:", call);
+      
+      setIsCallActive(true);
+
+      setActiveItemIndex(index);
+      
+      if (call && typeof call.on === 'function') {
+        call.on("call-end", () => {
+          setIsCallActive(false);
+          setActiveItemIndex(null);
+        });
+      }
+    } catch (error) {
+      console.error("Error starting call:", error);
+    }
+  };
+
+  const handleStopCall = () => {
+    setIsCallActive(false);
+    setActiveItemIndex(null);
     
-    vapi.start(mentorWithTopic);
+    
+    window.location.reload();
   };
 
   return (
@@ -49,14 +73,45 @@ const SyllabusPage = () => {
       <MainNavbar />
       <div>
         {syllabus.map((item, index) => (
+        <div key={index} className="collapse collapse-arrow bg-base-100 border border-base-300">
+            <input type="radio" name="my-accordion-2" defaultChecked />
+            <div className="collapse-title font-semibold">{item.topic}</div>
+            <div className="collapse-content text-sm">{item.description}</div>
+            {activeItemIndex === index && isCallActive ? (
+              <div>
+                
+                <button onClick={handleStopCall}>Stop AI</button>
+              </div>
+            ) : (
+              <button 
+                onClick={() => handleAskAI(item.topic, item.description, index)}
+                disabled={isCallActive}
+              >
+                Ask AI
+              </button>
+            )}
+        </div>
+        ))},
+        {/* {syllabus.map((item, index) => (
+          
           <div key={index}>
             <h3>{item.topic}</h3>
             <p>{item.description}</p>
-            <button onClick={() => handleAskAI(item.topic, item.description)}>
-              Ask AI
-            </button>
+            {activeItemIndex === index && isCallActive ? (
+              <div>
+                <span>AI Mentor Active</span>
+                <button onClick={handleStopCall}>Stop AI</button>
+              </div>
+            ) : (
+              <button 
+                onClick={() => handleAskAI(item.topic, item.description, index)}
+                disabled={isCallActive}
+              >
+                Ask AI
+              </button>
+            )}
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );
