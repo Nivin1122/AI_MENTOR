@@ -30,7 +30,11 @@ const SyllabusPage = () => {
         </div>
         <div className="collapse-content text-sm">
           {item.description}
+          <div>
+            <button className="btn btn-soft btn-success">Ask Ai</button>
+          </div>
         </div>
+        
       </div>
       ))}
       

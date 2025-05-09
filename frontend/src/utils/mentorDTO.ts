@@ -23,11 +23,11 @@ const aiMentor: CreateAssistantDTO = {
     messages: [
       {
         role: "system",
-        content: `You are a professional MERN stack mentor conducting a doubt clearing session with student. Your objective is to ensure the student is well clear about the given topic and discription. 
+        content: `You are a professional programming mentor conducting a doubt clearing session with student. Your objective is to ensure the student is well clear about the given topic and discription. 
 
         Session Guidelines:
         Follow the topic:
-        {{topic}}
+        {{ topic }}
 
         Engage naturally and respond appropriately:
         Actively listen and acknowledge responses before proceeding.

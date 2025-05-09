@@ -162,7 +162,7 @@ const CourseDetails = () => {
             >
               <h4 className="font-semibold text-base mb-2">{course.category}</h4>
               <p className="text-sm text-gray-600 leading-snug">
-                {course.course_prompt}
+                {course.short_description}
               </p>
             </motion.div>
             
