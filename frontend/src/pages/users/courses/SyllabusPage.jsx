@@ -76,20 +76,24 @@ const SyllabusPage = () => {
         <div key={index} className="collapse collapse-arrow bg-base-100 border border-base-300">
             <input type="radio" name="my-accordion-2" defaultChecked />
             <div className="collapse-title font-semibold">{item.topic}</div>
-            <div className="collapse-content text-sm">{item.description}</div>
-            {activeItemIndex === index && isCallActive ? (
+            <div className="collapse-content text-sm">{item.description}
+              {activeItemIndex === index && isCallActive ? (
               <div>
                 
-                <button onClick={handleStopCall}>Stop AI</button>
+                <button className="btn btn-outline btn-error" onClick={handleStopCall}>Stop AI</button>
               </div>
             ) : (
-              <button 
-                onClick={() => handleAskAI(item.topic, item.description, index)}
-                disabled={isCallActive}
-              >
-                Ask AI
-              </button>
+              <div>
+                <button className="btn btn-dash btn-success"
+                  onClick={() => handleAskAI(item.topic, item.description, index)}
+                  disabled={isCallActive}
+                >
+                  Ask AI
+                </button>
+              </div>
             )}
+          </div>
+            
         </div>
         ))},
         {/* {syllabus.map((item, index) => (
