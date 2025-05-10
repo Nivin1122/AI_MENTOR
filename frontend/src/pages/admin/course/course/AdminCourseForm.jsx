@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCourse, clearMessages } from '../../../redux/slices/courses/courseSlice';
+import { addCourse, clearMessages } from '../../../../redux/slices/courses/courseSlice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiUpload, FiX, FiCheckCircle, FiChevronDown } from 'react-icons/fi';
 
@@ -14,7 +14,7 @@ const AdminCourseForm = () => {
   const [formData, setFormData] = useState({
     title: '',
     language: '',
-    category: '', // This will now store the category ID
+    category: '', 
     short_description: '',
     full_description: '',
     price: '',

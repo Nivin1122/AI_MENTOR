@@ -39,11 +39,12 @@ const AdminSidebar = () => {
       icon: <FiBook />,
       path: '/admin/courses',
       submenu: [
-        { title: 'All Courses', path: '/admin/courses' },
+      
         {
           title: 'Course Management',
           path: '/admin/courses/management',
           submenu: [
+            { title: 'All Course', path: '/admin/courses/all_courses' },
             { title: 'Add Course', path: '/admin/courses/add' },
             { title: 'Edit Courses', path: '/admin/courses/edit' }
           ]
@@ -55,6 +56,15 @@ const AdminSidebar = () => {
             { title: 'All Categories', path: '/admin/courses/categories' },
             { title: 'Add Category', path: '/admin/category/create' },
             { title: 'Edit Categories', path: '/admin/courses/categories/edit' }
+          ]
+        },
+        {
+          title: 'Syllabus',
+          // path: '/admin/courses/add_syllabus',
+          submenu: [
+            { title: 'List Syllabus', path: '/admin/courses/list_syllabus' },
+            { title: 'Add Syllabus', path: '/admin/courses/add_syllabus' },
+            // { title: 'Edit Categories', path: '/admin/courses/categories/edit' }
           ]
         }
       ]
@@ -89,7 +99,7 @@ const AdminSidebar = () => {
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
     if (isExpanded) {
-      setActiveSubmenus([]); // Clear all active submenus when collapsing
+      setActiveSubmenus([]); 
     }
   };
 
@@ -119,7 +129,6 @@ const AdminSidebar = () => {
     return false;
   };
 
-  // Enhanced animation variants
   const sidebarVariants = {
     expanded: {
       width: '280px',

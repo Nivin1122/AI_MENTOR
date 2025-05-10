@@ -11,7 +11,7 @@ import AdminDashboard from "./pages/auth/admin/AdminDashboard";
 import HomePage from "./pages/auth/users/Home";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminProtectedRoute from "./routes/AdminProtectedRoute";
-import AdminCourseForm from "./pages/admin/course/AdminCourseForm";
+import AdminCourseForm from "./pages/admin/course/course/AdminCourseForm";
 import ProtectedAdminRoute from "./routes/courses/ProtectedAdminRoute";
 import Navbar from "./components/navbar/Navbar";
 import AdminLayout from "./components/admin/AdminLayout";
@@ -22,6 +22,7 @@ import StartClass from "./pages/users/courses/StartClass";
 import AddSyllabus from "./pages/admin/course/syllabus/AddSyllabus";
 import ListSyllabus from "./pages/admin/course/syllabus/ListSyllabus";
 import SyllabusPage from "./pages/users/courses/SyllabusPage";
+import All_Course from "./pages/admin/course/course/All_Course";
 
 
 function App() {
@@ -73,6 +74,7 @@ function App() {
               <Route path="categories" element={<div>Categories (placeholder)</div>} />
               <Route path="add_syllabus" element={<AddSyllabus />}/>
               <Route path="list_syllabus" element={<ListSyllabus />}/>
+              <Route path="all_courses" element={<All_Course />}/>
             </Route>
 
             <Route path="category">
