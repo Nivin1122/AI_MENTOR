@@ -23,7 +23,7 @@ import AddSyllabus from "./pages/admin/course/syllabus/AddSyllabus";
 import ListSyllabus from "./pages/admin/course/syllabus/ListSyllabus";
 import SyllabusPage from "./pages/users/courses/SyllabusPage";
 import All_Course from "./pages/admin/course/course/All_Course";
-
+import ProblemSolving from "./pages/users/problem_solving/ProblemSolving";
 
 function App() {
   return (
@@ -45,6 +45,7 @@ function App() {
           <Route path="/course/:courseId/syllabus" element={<SyllabusPage />} />
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/courses/:id" element={<CourseDetails />} />
+          <Route path="/problem-solving" element={<ProblemSolving />} />
           {/* Admin login (outside admin layout) */}
           <Route path="/admin-login" element={<AdminLogin />} />
           

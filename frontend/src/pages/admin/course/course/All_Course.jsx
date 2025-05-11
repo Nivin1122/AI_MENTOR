@@ -35,7 +35,7 @@ const All_Course = () => {
       ):(
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {allcourse.map(course => (
-            <div className="card bg-black w-96 shadow-sm">
+            <div className="card bg-black shadow-sm">
                 <figure>
                     <img
                     src={`http://127.0.0.1:8000${course.image}`}
