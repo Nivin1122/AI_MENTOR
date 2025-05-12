@@ -6,6 +6,7 @@ import { vapi } from "../../../sdk/vapi.sdk";
 import aiMentor from "../../../utils/mentorDTO"; 
 
 
+
 const SyllabusPage = () => {
   const { courseId } = useParams();
   const [syllabus, setSyllabus] = useState([]);
