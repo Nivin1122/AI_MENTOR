@@ -8,13 +8,14 @@ import aiMentor from "../../../utils/mentorDTO";
 
 
 const SyllabusPage = () => {
-  
+
   const { courseId } = useParams();
   const [syllabus, setSyllabus] = useState([]);
   const [isCallActive, setIsCallActive] = useState(false);
   const [activeItemIndex, setActiveItemIndex] = useState(null);
 
   useEffect(() => {
+    
     axios
       .get(`http://localhost:8000/courses/course/${courseId}/syllabus/`)
       .then((response) => {
