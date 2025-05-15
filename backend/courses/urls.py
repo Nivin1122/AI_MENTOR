@@ -12,4 +12,5 @@ urlpatterns = [
     path('add/syllabus/',views.add_Syllabus, name='add_syllabus'),
     path('list/syllabus/',views.list_syllabus, name='list_syllabus'),
     path('course/<int:course_id>/syllabus/', views.get_syllabus_by_course, name='syllabus-by-course'),
+    path('syllabus/mark/', views.mark_syllabus_completed),
 ]
