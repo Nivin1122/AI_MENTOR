@@ -45,6 +45,7 @@ const All_Course = () => {
                     <h2 className="card-title">{course.title}</h2>
                     <p>{course.short_description}</p>
                     <p>{course.category}</p>
+                    <p>{course.course_prompt}</p>
                     <div className="card-actions justify-end">
                     <button className="btn btn-primary">Edit</button>
                     </div>

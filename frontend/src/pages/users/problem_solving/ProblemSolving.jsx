@@ -30,17 +30,20 @@ const ProblemSolving = () => {
     `
     const [evaluation, setEvaluation] = useState("")
     
-
+ 
     const genetateQuestion = () => {
         console.log(prompt)
         axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GeminiAPIKey}`, {
+            
             contents: [
                 {
                     parts: [{ text: prompt }]
                 }
             ]
+            
         }).then(res => {
             setProblem({...problem, question: res.data.candidates[0].content.parts[0].text})
+            
         }).catch(err => {
             alert("Try again")
         })

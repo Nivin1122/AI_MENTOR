@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework import generics, permissions
 from .models import Category,Syllabus
-from .serializers import CategorySerializer, SyllabusSerializer, SyllabusListSerializer
+from .serializers import CategorySerializer,CategoryListSerializer, SyllabusSerializer, SyllabusListSerializer
 
 
 
@@ -75,7 +75,7 @@ def add_Syllabus(request):
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def list_syllabus(request):
-    syllabus = Syllabus.objects.all()
+    syllabus = Syllabus.objects.all().order_by('session_index')
     serializer = SyllabusListSerializer(syllabus, many=True)
     return Response(serializer.data)
 
@@ -88,6 +88,14 @@ def get_syllabus_by_course(request, course_id):
     except Course.DoesNotExist:
         return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    syllabus = Syllabus.objects.filter(course=course)
+    syllabus = Syllabus.objects.filter(course=course).order_by('session_index')
     serializer = SyllabusListSerializer(syllabus, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def list_category(request):
+    category = Category.objects.all()
+    serializer = CategoryListSerializer(category, many=True)
     return Response(serializer.data)

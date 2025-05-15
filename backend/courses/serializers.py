@@ -13,6 +13,13 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
+class CategoryListSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Category
+        fields = '__all__'
+        # depth=2
+
 class SyllabusListSerializer(serializers.ModelSerializer):
     # course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all()) 
     class Meta:

@@ -18,12 +18,13 @@ import AdminLayout from "./components/admin/AdminLayout";
 import CourseDetails from "./pages/users/courses/CourseDetails";
 import UserList from "./pages/admin/users/UsersList";
 import AddCategory from "./pages/admin/course/category/AddCategory";
-import StartClass from "./pages/users/courses/StartClass";
 import AddSyllabus from "./pages/admin/course/syllabus/AddSyllabus";
 import ListSyllabus from "./pages/admin/course/syllabus/ListSyllabus";
 import SyllabusPage from "./pages/users/courses/SyllabusPage";
 import All_Course from "./pages/admin/course/course/All_Course";
 import ProblemSolving from "./pages/users/problem_solving/ProblemSolving";
+import Playground from "./pages/users/problem_solving/Playground";
+import ListCategory from "./pages/admin/course/category/ListCategory";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/courses/:id" element={<CourseDetails />} />
           <Route path="/problem-solving" element={<ProblemSolving />} />
+          <Route path="/playground" element={<Playground />} />
           {/* Admin login (outside admin layout) */}
           <Route path="/admin-login" element={<AdminLogin />} />
           
@@ -72,7 +74,8 @@ function App() {
             <Route path="courses">
               <Route index element={<div>All Courses (placeholder)</div>} />
               <Route path="add" element={<AdminCourseForm />} />
-              <Route path="categories" element={<div>Categories (placeholder)</div>} />
+              {/* <Route path="categories" element={<div>Categories (placeholder)</div>} /> */}
+              <Route path="list/categories" element={<ListCategory />}/>
               <Route path="add_syllabus" element={<AddSyllabus />}/>
               <Route path="list_syllabus" element={<ListSyllabus />}/>
               <Route path="all_courses" element={<All_Course />}/>
