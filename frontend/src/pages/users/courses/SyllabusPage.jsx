@@ -74,11 +74,10 @@ const SyllabusPage = () => {
   };
 
   const handleToggleComplete = (syllabusId, index) => {
-    // Get the current status and toggle it
+    
     const currentStatus = syllabus[index].is_completed;
     const newStatus = !currentStatus;
-    console.log("button working")
-    // Make the API call
+    
     axios
       .post(
         "http://localhost:8000/courses/syllabus/mark/",
@@ -93,14 +92,14 @@ const SyllabusPage = () => {
         }
       )
       .then(() => {
-        // Create a new array with the updated item
+        
         const updatedSyllabus = [...syllabus];
         updatedSyllabus[index] = {
           ...updatedSyllabus[index],
           is_completed: newStatus
         };
         
-        // Update state
+       
         setSyllabus(updatedSyllabus);
         updateProgress(updatedSyllabus);
         
@@ -109,6 +108,13 @@ const SyllabusPage = () => {
         console.error("Error updating progress:", error);
         alert("Failed to update completion status. Please try again.");
       });
+  };
+
+  const isItemUnlocked = (index) => {
+  
+    if (index === 0) return true;
+    
+    return syllabus[index - 1]?.is_completed === true;
   };
 
   return (
@@ -123,49 +129,83 @@ const SyllabusPage = () => {
         </div>
         <p className="text-sm font-semibold mb-4">Progress: {progress}%</p>
 
-        {syllabus.map((item, index) => (
-          <div
-            key={item.id}
-            className="collapse collapse-arrow bg-base-100 border border-base-300 mb-2"
-          >
-            
-            <input type="radio" name="my-accordion-2" />
-            <div className="collapse-title font-semibold flex justify-between items-center">
-              <span>{item.topic}</span>
+        {syllabus.map((item, index) => {
+          const unlocked = isItemUnlocked(index);
+          
+          return (
+            <div
+              key={item.id}
+              className={`collapse collapse-arrow mb-2 ${
+                unlocked ? "bg-base-100" : "bg-gray-100"
+              } border border-base-300`}
+            >
+              <input 
+                type="radio" 
+                name="my-accordion-2" 
+                disabled={!unlocked}
+              />
+              <div className="collapse-title font-semibold flex justify-between items-center">
+                
+                <div className="flex items-center gap-2">
+                  {!unlocked && (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="text-gray-500" viewBox="0 0 16 16">
+                      <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                    </svg>
+                  )}
+                  <span className={unlocked ? "" : "text-gray-500"}>
+                    {item.topic}
+                  </span>
+                  
+                </div>
+                
+                
+              </div>
               
-            </div>
-            
-            <div className="collapse-content text-sm">
-              {item.description}
-              {activeItemIndex === index && isCallActive ? (
-                <button className="btn btn-outline btn-error mt-3" onClick={handleStopCall}>
-                  Stop AI
-                </button>
-              ) : (
-                <button
-                  className="btn btn-success mt-3"
-                  onClick={() => handleAskAI(item.topic, item.description, index)}
-                  disabled={isCallActive}
-                >
-                  Ask AI
-                </button>
-              )}
-              <div>
-            <button
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevent accordion from toggling
-                  handleToggleComplete(item.id, index);
-                }}
-                className={`btn btn-sm ${
-                  item.is_completed ? "btn-success" : "btn-outline"
-                }`}
-              >
-                {item.is_completed ? "Completed" : "Mark Complete"}
-              </button>
+              
+              <div className="collapse-content text-sm">
+                {unlocked ? (
+                  <>
+                    <p>{item.description}</p>
+                    <div className="mt-3 flex gap-2">
+                      {activeItemIndex === index && isCallActive ? (
+                        <button className="btn btn-outline btn-error" onClick={handleStopCall}>
+                          Stop AI
+                        </button>
+                      ) : (
+                        <button
+                          className="btn btn-success"
+                          onClick={() => handleAskAI(item.topic, item.description, index)}
+                          disabled={isCallActive}
+                        >
+                          Ask AI
+                        </button>
+                      )}
+                      <div>
+                  {unlocked && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleComplete(item.id, index);
+                    }}
+                    className={`btn btn-sm ${
+                      item.is_completed ? "btn-success" : "btn-outline"
+                    }`}
+                  >
+                    {item.is_completed ? "Completed" : "Mark Complete"}
+                  </button>
+                )}
+                </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-4">
+                    <p className="text-gray-500">Complete the previous module to unlock this content</p>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
