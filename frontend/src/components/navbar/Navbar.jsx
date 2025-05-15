@@ -34,8 +34,8 @@ const Navbar = () => {
           <Link to="/playground" className="text-white text-sm tracking-wider font-medium mx-5">
             PLAYGROUND
           </Link>
-          <Link to="/suggestion" className="text-white text-sm tracking-wider font-medium mx-5">
-            SUGGESTION
+          <Link to="/problem-solving" className="text-white text-sm tracking-wider font-medium mx-5">
+            PROBLEM SOLVING
           </Link>
           <Link to="/about" className="text-white text-sm tracking-wider font-medium mx-5">
             ABOUT US

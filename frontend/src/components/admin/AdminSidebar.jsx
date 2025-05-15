@@ -53,7 +53,7 @@ const AdminSidebar = () => {
           title: 'Categories',
           path: '/admin/courses/categories',
           submenu: [
-            { title: 'All Categories', path: '/admin/courses/categories' },
+            { title: 'All Categories', path: '/admin/courses/list/categories' },
             { title: 'Add Category', path: '/admin/category/create' },
             { title: 'Edit Categories', path: '/admin/courses/categories/edit' }
           ]

@@ -18,6 +18,7 @@ const AdminCourseForm = () => {
     short_description: '',
     full_description: '',
     price: '',
+    course_prompt: '',
   });
   const [image, setImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -400,6 +401,22 @@ const AdminCourseForm = () => {
             id="full_description"
             name="full_description" 
             value={formData.full_description}
+            placeholder="Detailed course description" 
+            onChange={handleChange} 
+            required 
+            className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+            rows={5}
+          />
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="form-group">
+          <label htmlFor="full_description" className="block text-sm font-medium text-gray-300 mb-2">
+            Course Prompt
+          </label>
+          <textarea 
+            id="full_description"
+            name="full_description" 
+            value={formData.course_prompt}
             placeholder="Detailed course description" 
             onChange={handleChange} 
             required 

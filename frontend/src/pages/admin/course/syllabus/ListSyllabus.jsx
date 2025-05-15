@@ -42,8 +42,6 @@ const ListSyllabus = () => {
   }, []);
 
   
-
-  // Toggle accordion open/close state
   const toggleAccordion = (id) => {
     setOpenAccordion(prev => ({
       ...prev,
