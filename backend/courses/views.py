@@ -7,7 +7,7 @@ from .models import Course
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework import generics, permissions
-from .models import Category,Syllabus
+from .models import Category,Syllabus,UserSyllabusProgress
 from .serializers import CategorySerializer,CategoryListSerializer, SyllabusSerializer, SyllabusListSerializer
 
 
@@ -89,8 +89,25 @@ def get_syllabus_by_course(request, course_id):
         return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
 
     syllabus = Syllabus.objects.filter(course=course).order_by('session_index')
-    serializer = SyllabusListSerializer(syllabus, many=True)
+    
+    # Add the request to context for the serializer to access the user
+    serializer = SyllabusListSerializer(syllabus, many=True, context={'request': request})
+    
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def mark_syllabus_completed(request):
+    syllabus_id = request.data.get('syllabus_id')
+    is_completed = request.data.get('is_completed', True)
+    progress, created = UserSyllabusProgress.objects.get_or_create(
+        user=request.user,
+        syllabus_id=syllabus_id
+    )
+    progress.is_completed = is_completed
+    progress.save()
+    return Response({'status': 'success'})
 
 
 @api_view(['GET'])

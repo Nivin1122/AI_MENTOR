@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import CustomUser
 
 
 class Category(models.Model):
@@ -29,3 +30,12 @@ class Syllabus(models.Model):
 
     def __str__(self):
         return f"{self.course.category}"
+    
+    
+class UserSyllabusProgress(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    syllabus = models.ForeignKey(Syllabus, on_delete=models.CASCADE)
+    is_completed = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('user', 'syllabus')
