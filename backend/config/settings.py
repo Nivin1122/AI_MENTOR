@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+GEMINI_API_KEY = 'AIzaSyBqxvmZkkqd3iIqV3cDD_vQMcu27ColK-Q'
+
 
 # Application definition
 
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     'users',
     'admin_panel',
     'courses',
+    'Exam',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +84,7 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
 ]
+
 
 
 

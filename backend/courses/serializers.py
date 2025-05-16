@@ -18,7 +18,7 @@ class CategoryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
-        # depth=2
+    
 
 class SyllabusListSerializer(serializers.ModelSerializer):
 
