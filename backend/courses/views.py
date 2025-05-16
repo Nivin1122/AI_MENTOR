@@ -15,7 +15,7 @@ from .serializers import CategorySerializer,CategoryListSerializer, SyllabusSeri
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_course(request):
-    
+        
     print("Add course request received")
     print(f"Authenticated user: {request.user}")
     print(f"Request data: {request.data}")
@@ -90,7 +90,6 @@ def get_syllabus_by_course(request, course_id):
 
     syllabus = Syllabus.objects.filter(course=course).order_by('session_index')
     
-    # Add the request to context for the serializer to access the user
     serializer = SyllabusListSerializer(syllabus, many=True, context={'request': request})
     
     return Response(serializer.data)
