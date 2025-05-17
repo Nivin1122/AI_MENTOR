@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import MainNavbar from "../../../components/navbar/MainNavbar";
 import { vapi } from "../../../sdk/vapi.sdk";
 import aiMentor from "../../../utils/mentorDTO";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const SyllabusPage = () => {
   const { courseId } = useParams();
@@ -13,6 +13,7 @@ const SyllabusPage = () => {
   const [activeItemIndex, setActiveItemIndex] = useState(null);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   
   // Test ////////////
   const [testMode, setTestMode] = useState(false);
@@ -71,11 +72,22 @@ const SyllabusPage = () => {
       const call = vapi.start(mentorWithTopic);
       setIsCallActive(true);
       setActiveItemIndex(index);
+      setIsSpeaking(true);
 
       if (call && typeof call.on === "function") {
+        // Add speech detection events
+        call.on("speech-start", () => {
+          setIsSpeaking(true);
+        });
+        
+        call.on("speech-end", () => {
+          setIsSpeaking(false);
+        });
+        
         call.on("call-end", () => {
           setIsCallActive(false);
           setActiveItemIndex(null);
+          setIsSpeaking(false);
         });
       }
     } catch (error) {
@@ -668,20 +680,56 @@ const SyllabusPage = () => {
                             <p className="mb-4 text-sm leading-relaxed">{item.description}</p>
                             <div className="mt-4 flex flex-col sm:flex-row gap-3">
                               {activeItemIndex === index && isCallActive ? (
-                                <motion.button 
-                                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                                  className="btn btn-error btn-outline flex-grow sm:flex-grow-0" onClick={handleStopCall}>
-                                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                                  Stop AI
-                                </motion.button>
+                                <div className="flex flex-col w-full">
+                                  <motion.button 
+                                    whileHover={{ scale: 1.03 }} 
+                                    whileTap={{ scale: 0.97 }}
+                                    className="btn btn-error btn-outline mb-2" 
+                                    onClick={handleStopCall}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                    Stop AI
+                                  </motion.button>
+                                  
+                                  {/* Audio visualization when speaking */}
+                                  <div className="flex justify-center items-center h-8 my-2">
+                                    {isSpeaking && (
+                                      <div className="flex items-end space-x-1">
+                                        {[1, 2, 3, 4, 5].map((i) => (
+                                          <motion.div
+                                            key={i}
+                                            className="w-1.5 bg-primary rounded-full"
+                                            animate={{
+                                              height: [
+                                                `${Math.random() * 10 + 5}px`,
+                                                `${Math.random() * 20 + 10}px`,
+                                                `${Math.random() * 10 + 5}px`
+                                              ]
+                                            }}
+                                            transition={{
+                                              duration: 0.5,
+                                              repeat: Infinity,
+                                              delay: i * 0.1
+                                            }}
+                                          />
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
                               ) : (
                                 <motion.button
-                                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                                  whileHover={{ scale: 1.03 }} 
+                                  whileTap={{ scale: 0.97 }}
                                   className="btn btn-success flex-grow sm:flex-grow-0"
                                   onClick={() => handleAskAI(item.topic, item.description, index)}
                                   disabled={isCallActive}
                                 >
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg>
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                                  </svg>
                                   Ask AI
                                 </motion.button>
                               )}
