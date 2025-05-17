@@ -45,7 +45,7 @@ const HomePage = () => {
         <div className="container mx-auto px-6 py-6 pb-12 md:pb-12 lg:pb-12 relative z-10">
           <div className="flex flex-col lg:flex-row items-center">
     
-            <div className="w-full lg:w-1/2 text-white mb-8 lg:mb-0">
+            <div className="w-full lg:w-1/2 text-white ml-20 mb-8 lg:mb-0">
               <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 lg:mb-6">
                 <span className="text-[#FF9F67]">Studying</span> Online is now<br />
                 much easier
@@ -81,7 +81,7 @@ const HomePage = () => {
                 {/* Main image without clipping at the top */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <img 
-                    src="src/assets/home/hero.png" 
+                    src="src/assets/home/ai_robot.jpg" 
                     alt="Student with books" 
                     className="w-auto h-[600px] max-w-none object-contain z-5"
                   />
@@ -90,17 +90,17 @@ const HomePage = () => {
               
               {/* Floating elements */}
               {/* Students box */}
-              <div className="absolute top-16 left-0 lg:left-12 bg-white rounded-lg p-3 shadow-lg z-20 flex items-center">
+              {/* <div className="absolute top-16 left-0 lg:left-12 bg-white rounded-lg p-3 shadow-lg z-20 flex items-center">
                 <div className="bg-[#4D95FC] p-2 rounded-lg mr-3">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <div className="text-gray-800 font-bold text-lg">250k</div>
                   <div className="text-gray-500 text-sm">Assisted Student</div>
-                </div>
-              </div>
+                </div> */}
+              {/* </div> */}
               
               {/* Chart icon */}
               <div className="absolute top-10 right-5 lg:right-8 bg-[#FF5156] p-3 rounded-lg shadow-lg z-20">
@@ -110,7 +110,7 @@ const HomePage = () => {
               </div>
               
               {/* Congratulations box */}
-              <div className="absolute right-6 top-1/3 bg-white rounded-lg p-3 shadow-lg z-20">
+              {/* <div className="absolute right-6 top-1/3 bg-white rounded-lg p-3 shadow-lg z-20">
                 <div className="flex items-center">
                   <div className="bg-[#FF9F67] p-2 rounded-lg mr-3">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -122,7 +122,7 @@ const HomePage = () => {
                     <div className="text-gray-500 text-xs">Your admission completed</div>
                   </div>
                 </div>
-              </div>
+              </div> */}
               
               {/* Class notification - positioned to be visible above curve */}
               <div className="absolute bottom-28 md:bottom-32 lg:bottom-32 left-6 lg:left-12 bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg z-20 w-64 lg:w-72">
