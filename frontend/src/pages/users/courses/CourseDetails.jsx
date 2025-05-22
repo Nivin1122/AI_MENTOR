@@ -22,8 +22,16 @@ const CourseDetails = () => {
 
   const { id } = useParams();
   const [course, setCourse] = useState(null);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   const handleStartNow = async (courseId) => {
+    const isLoggedIn = localStorage.getItem("accessToken") !== null;
+    
+    if (!isLoggedIn) {
+      setShowLoginPopup(true);
+      return;
+    }
+    
     navigate(`/course/${courseId}/syllabus`);
   };
 
@@ -44,10 +52,46 @@ const CourseDetails = () => {
     return <div className="text-center mt-10">Loading...</div>;
   }
 
-  
+  const LoginPopup = () => {
+    if (!showLoginPopup) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-white rounded-lg p-6 max-w-sm w-full mx-4"
+        >
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">Login Required</h3>
+          <p className="text-gray-600 mb-6">
+            Please login to start this course. You'll need an account to access the course content.
+          </p>
+          <div className="flex justify-end space-x-3">
+            <button
+              onClick={() => setShowLoginPopup(false)}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                setShowLoginPopup(false);
+                navigate('/login');
+              }}
+              className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors"
+            >
+              Login Now
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  };
+
   return (
     <div>
       <MainNavbar />
+      <LoginPopup />
       <div className="container mx-auto px-6 py-8" ref={containerRef}>
         
       <motion.div 
