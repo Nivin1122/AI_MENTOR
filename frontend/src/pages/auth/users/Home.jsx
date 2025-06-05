@@ -164,11 +164,11 @@ const HomePage = () => {
         </div>
       </div>
 
-      <SuccessMetrics />
+      {/* <SuccessMetrics /> */}
       <CloudFeatures />
-      <CourseCategories />
-      <PaidCourses />
+      {/* <CourseCategories /> */}
       <FreeCourses apiCourses={courses} isLoading={loading} hasError={error} />
+      <PaidCourses />
       <Features />
       <Footer />
     </div>

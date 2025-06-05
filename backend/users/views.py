@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+from .serializers import UserProfileSerializer  # We'll create this next
 
 
 User = get_user_model()
@@ -45,3 +46,17 @@ def login_user(request):
 @permission_classes([IsAuthenticated])
 def home_page(request):
     return Response({"message": f"Welcome back, {request.user.username}!"})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_profile(request):
+    try:
+        user = request.user
+        serializer = UserProfileSerializer(user)
+        return Response(serializer.data)
+    except Exception as e:
+        print(f"Error in get_user_profile: {str(e)}")  # Add this for debugging
+        return Response(
+            {'detail': 'Error fetching user profile'}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )

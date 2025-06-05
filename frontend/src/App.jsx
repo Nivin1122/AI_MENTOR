@@ -25,6 +25,8 @@ import All_Course from "./pages/admin/course/course/All_Course";
 import ProblemSolving from "./pages/users/problem_solving/ProblemSolving";
 import Playground from "./pages/users/problem_solving/Playground";
 import ListCategory from "./pages/admin/course/category/ListCategory";
+import AllCourses from "./pages/users/courses/AllCourses";
+
 
 function App() {
   return (
@@ -37,14 +39,15 @@ function App() {
           <Route
             path="/"
             element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
                 <HomePage />
-              </ProtectedRoute>
+              // </ProtectedRoute>
             }
           />
           
           <Route path="/course/:courseId/syllabus" element={<SyllabusPage />} />
           <Route path="/navbar" element={<Navbar />} />
+          <Route path="/courses" element={<AllCourses />} />
           <Route path="/courses/:id" element={<CourseDetails />} />
           <Route path="/problem-solving" element={<ProblemSolving />} />
           <Route path="/playground" element={<Playground />} />

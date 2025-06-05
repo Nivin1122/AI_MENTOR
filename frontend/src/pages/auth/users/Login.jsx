@@ -5,29 +5,99 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [animate, setAnimate] = useState(false);
-  const navigate = useNavigate();
+  const [errors, setErrors] = useState({
+    username: '',
+    password: '',
+    general: ''
+  });
 
   useEffect(() => {
     setAnimate(true);
   }, []);
 
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { username: '', password: '', general: '' };
+    
+    // Username validation
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
+      isValid = false;
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
+      isValid = false;
+    }
+    
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+      isValid = false;
+    }
+    
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Clear previous errors
+    setErrors({ username: '', password: '', general: '' });
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+    
     setIsLoading(true);
     
-    setTimeout(() => {
-      dispatch(loginUser(formData));
-      navigate('/');
-    }, 800);
+    try {
+      // Dispatch the login action and wait for it to complete
+      await dispatch(loginUser(formData)).unwrap();
+      
+      // Navigate after successful login
+      setTimeout(() => {
+        navigate('/');
+      }, 800);
+    } catch (error) {
+      console.error('Login failed:', error);
+      
+      // Handle specific error cases based on error response
+      if (error?.response?.data) {
+        const { errorType, message } = error.response.data;
+        
+        if (errorType === 'USER_NOT_FOUND' || (message && message.toLowerCase().includes('username'))) {
+          setErrors({ ...errors, username: 'Username is incorrect' });
+        } else if (errorType === 'INVALID_PASSWORD' || (message && message.toLowerCase().includes('password'))) {
+          setErrors({ ...errors, password: 'Password is incorrect' });
+        } else if (errorType === 'ACCOUNT_LOCKED') {
+          setErrors({ ...errors, general: 'Your account has been locked. Please contact support.' });
+        } else if (errorType === 'ACCOUNT_DISABLED') {
+          setErrors({ ...errors, general: 'Your account has been disabled. Please contact support.' });
+        } else {
+          setErrors({ ...errors, general: message || 'Authentication failed' });
+        }
+      } else {
+        // Fallback error for network issues
+        setErrors({ 
+          ...errors, 
+          general: 'Login failed. Please enter valid username and password.' 
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      
-      
       {/* Main container */}
       <div className={`w-full max-w-md transition-all duration-500 ${
         animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
@@ -47,6 +117,13 @@ export default function Login() {
             <h2 className="text-lg font-medium text-gray-800 mb-6">Sign in to your account</h2>
             
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* General error message */}
+              {errors.general && (
+                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+                  {errors.general}
+                </div>
+              )}
+              
               <div>
                 <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
                   Username
@@ -55,12 +132,14 @@ export default function Login() {
                   id="username"
                   name="username"
                   type="text"
-                  required
                   value={formData.username}
                   onChange={e => setFormData({ ...formData, username: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  className={`w-full px-3 py-2 border ${errors.username ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500`}
                   placeholder="Enter your username"
                 />
+                {errors.username && (
+                  <p className="mt-1 text-xs text-red-600">{errors.username}</p>
+                )}
               </div>
               
               <div>
@@ -76,12 +155,14 @@ export default function Login() {
                   id="password"
                   name="password"
                   type="password"
-                  required
                   value={formData.password}
                   onChange={e => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  className={`w-full px-3 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500`}
                   placeholder="Enter your password"
                 />
+                {errors.password && (
+                  <p className="mt-1 text-xs text-red-600">{errors.password}</p>
+                )}
               </div>
               
               <div className="flex items-center">

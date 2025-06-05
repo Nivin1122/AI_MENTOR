@@ -55,7 +55,7 @@ const ProblemSolving = () => {
     
     const getPrompt = () => {
         return `
-            Generate one Python coding question. The student's skill level is difficulty: ${difficultyLevels[difficulty].value} out of 100. The question should describe a relatable real-life situation. Do not include any code in the prompt.
+            Generate one Python coding question. The student's skill level is difficulty: ${difficultyLevels[difficulty].value} out of 100. The question should be like leatcode questions. Do not include any code in the prompt and the question want to be based on the difficulty less that 6 lines.
 
         Along with the question, include exactly 2 input-output examples that help the student understand the expected behavior. Format the examples like this:
 
